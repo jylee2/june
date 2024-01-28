@@ -2,20 +2,29 @@
 //  ContentView.swift
 //  June
 //
-//  Created by Jun Yi Lee on 28/1/2024.
-//
 
 import SwiftUI
+import MapKit
 
 struct ContentView: View {
+    @State private var position: MapCameraPosition = .automatic
+    @Namespace var mapScope
+    
     var body: some View {
-        VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundStyle(.tint)
-            Text("Hello, world!")
-        }
-        .padding()
+        Map(position: $position, scope: mapScope){
+            UserAnnotation()
+        }.mapStyle(.hybrid(elevation: .realistic))
+            .overlay(alignment: .bottomTrailing) {
+                VStack {
+                    MapUserLocationButton(scope: mapScope)
+                    MapPitchToggle(scope: mapScope)
+                    MapCompass(scope: mapScope)
+                        .mapControlVisibility(.visible)
+                }
+                .padding(.trailing, 10)
+                .buttonBorderShape(.circle)
+            }
+            .mapScope(mapScope)
     }
 }
 
